@@ -1,5 +1,6 @@
 import { faChevronCircleDown } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useLocation } from "react-router";
 
 function FormGroup({label, children}) {
     // TODO: Actually use label elements
@@ -9,11 +10,14 @@ function FormGroup({label, children}) {
     </div>
 }
 
-export function ProjectForm({update}) {
+export function ProjectForm() {
+    const { search } = useLocation();
+    const update = new URLSearchParams(search).get("update");
+
     return (
         <div className="bg-hackbca-dark-blue min-h-screen p-8 flex justify-center items-center">
             <form className="bg-white rounded shadow-lg p-8 w-192 max-w-full">
-                <h1 className="text-5xl font-bold"><span className="bg-clip-text bg-gradient-to-r from-hackbca-blue to-hackbca-orange-dark text-transparent">{update ? "Update Project" : "Add New Project"}</span></h1>
+                <h1 className="text-5xl font-bold fancy-text w-max max-w-full pb-2">{update ? "Update Project" : "Add New Project"}</h1>
                 <FormGroup label="Name">
                     <input type="text" className="w-full bg-gray-100 rounded px-3 py-2 transition-all hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-hackbca-orange focus:ring-opacity-75" placeholder="My Great Project" />
                 </FormGroup>

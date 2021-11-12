@@ -1,35 +1,49 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-{/*import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'*/}
+import { faCircleInfo, faStar, faPen, faTrash, faUsers, faBarsSort } from '@fortawesome/free-solid-svg-icons'
 
 export function Projects() {
   return (
-      <div class="bg-hackbca-dark-blue min-h-screen p-8 flex justify-center items-center">
-        <div class="bg-white rounded shadow-lg p-8 w-192 max-w-full">
-          <h1 class="text-3xl ">Available Projects</h1>
+    
+    <div className="bg-hackbca-dark-blue min-h-screen p-8 flex justify-center items-center">
+      <div className="bg-white rounded shadow-lg p-8 w-192 max-w-full">
+    
+        <h1 className="text-5xl font-bold fancy-text w-max max-w-full pb-2">Available Projects</h1>
+        <div className="w-full bg-gray-100 rounded px-3 py-2">
+          <div> Click on the event name for more details!</div>
           
-          <blockquote>
-            Click on the event name for more details! 
-            <FontAwesomeIcon icon="fa-solid fa-circle-info" />
-            Click on <i class="">sort</i> to sort by that column, or items in <i
-    class="">filter_list</i> columns to filter by that item.
-          </blockquote>
+          
+          <div class="grid grid-cols-6 gap-4">
+            
+            <div class="block mt-3 font-medium text-gray-600">Project</div>
+            <div class="block mt-3 font-medium text-gray-600">Owner</div>
+            <div class="block mt-3 font-medium text-gray-600">Time</div>
+            <div class="block mt-3 font-medium text-gray-600">Type</div>
+            <div class="block mt-3 font-medium text-gray-600">People Interested</div>
+            <div class="block mt-3 font-medium text-gray-600" >Edit/Delete</div>
 
-          <div class="grid grid-cols-5 gap-4">
-          
-            <div>Project</div>
-            <div>Owner</div>
-            <div>Time</div>
-            <div>Type</div>
-            <div>Date Proposed</div>
+            <div>Remake Something!</div>
+            <div>Anonymous</div>
+            <div>10:30 am</div>
+            <div>Coding</div>
+            <div>5 <FontAwesomeIcon icon={faUsers} /></div>
+            <div className="flex flex-row items-center space-x-1"><FontAwesomeIcon icon={faPen} /> <FontAwesomeIcon icon={faTrash} /></div>
+
+            <div>Project 2</div>
+            <div>Anonymous 2</div>
+            <div>10:45 am</div>
+            <div>Games</div>
+            <div>3 <FontAwesomeIcon icon={faUsers} /></div>
+            <div className="flex flex-row items-center space-x-1"><FontAwesomeIcon icon={faPen} /> <FontAwesomeIcon icon={faTrash} /></div>
+
 
           </div>
         </div>
-          
       </div>
-  )
+    </div>
+  );
+}
 
-
-{/*
+/*
 <div class="container">
 
 
@@ -142,5 +156,4 @@ export function Projects() {
 <i class="large material-icons">create</i>
 </a>
 
-*/}
-}
+*/
