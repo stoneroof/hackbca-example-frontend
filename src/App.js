@@ -13,6 +13,7 @@ import { Project } from './pages/Project';
 import { ProjectForm } from './pages/ProjectForm';
 import { Navbar } from "./Navbar";
 import { NotFound } from "./pages/404";
+import { Footer } from "./Footer";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/projectform" element={<ProjectForm />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }

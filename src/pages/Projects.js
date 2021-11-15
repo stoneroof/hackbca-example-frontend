@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleInfo, faStar, faPen, faTrash, faUsers, faBarsSort } from '@fortawesome/free-solid-svg-icons'
+import { faCircleInfo, faStar, faPen, faTrash, faUsers, faBarsSort, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { Link } from 'react-router-dom';
 
 export function Projects() {
   return (
@@ -7,12 +8,18 @@ export function Projects() {
     <div className="bg-hackbca-dark-blue min-h-screen p-8 flex justify-center items-center">
       <div className="bg-white rounded shadow-lg p-8 w-192 max-w-full">
     
-        <h1 className="text-5xl font-bold fancy-text w-max max-w-full pb-2">Available Projects</h1>
+        <div className="flex items-start mb-6">
+          <h1 className="text-5xl font-bold fancy-text w-max max-w-full pb-2">Available Projects</h1>
+          <div className="flex-grow" />
+          <Link to="/projectform" className="fancy-button ml-1 block">
+            <FontAwesomeIcon icon={faPlus} className="mr-2" /> Add Project
+          </Link>
+        </div>
         <div className="w-full bg-gray-100 rounded px-3 py-2">
-          <div> Click on the event name for more details!</div>
+          <div> Click on the project name for more details!</div>
           
           
-          <div class="grid grid-cols-6 gap-4">
+          <div class="grid grid-cols-6 gap-4 items-start">
             
             <div class="block mt-3 font-medium text-gray-600">Project</div>
             <div class="block mt-3 font-medium text-gray-600">Owner</div>
@@ -21,19 +28,19 @@ export function Projects() {
             <div class="block mt-3 font-medium text-gray-600">People Interested</div>
             <div class="block mt-3 font-medium text-gray-600" >Edit/Delete</div>
 
-            <div>Remake Something!</div>
+            <div><Link className="text-hackbca-blue hover:underline" to="/projects/1">Remake Something!</Link></div>
             <div>Anonymous</div>
             <div>10:30 am</div>
             <div>Coding</div>
             <div>5 <FontAwesomeIcon icon={faUsers} /></div>
-            <div className="flex flex-row items-center space-x-1"><FontAwesomeIcon icon={faPen} /> <FontAwesomeIcon icon={faTrash} /></div>
+            <div className="flex flex-row items-center space-x-1"><Link className="text-hackbca-blue" to="/projectform?update=true"><FontAwesomeIcon icon={faPen} /></Link> <FontAwesomeIcon icon={faTrash} /></div>
 
-            <div>Project 2</div>
+            <div><Link className="text-hackbca-blue hover:underline" to="/projects/2">Project 2</Link></div>
             <div>Anonymous 2</div>
             <div>10:45 am</div>
             <div>Games</div>
             <div>3 <FontAwesomeIcon icon={faUsers} /></div>
-            <div className="flex flex-row items-center space-x-1"><FontAwesomeIcon icon={faPen} /> <FontAwesomeIcon icon={faTrash} /></div>
+            <div className="flex flex-row items-center space-x-1"><Link className="text-hackbca-blue" to="/projectform?update=true"><FontAwesomeIcon icon={faPen} /></Link> <FontAwesomeIcon icon={faTrash} /></div>
 
 
           </div>

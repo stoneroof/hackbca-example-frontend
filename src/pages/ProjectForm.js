@@ -48,7 +48,7 @@ export function ProjectForm() {
                     <textarea className="w-full h-40 appearance-none bg-gray-100 rounded px-3 py-2 transition-all hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-hackbca-orange focus:ring-opacity-75" placeholder="Ǎ̸͖̦̩̬̄̓Ä̵̡͓̗͕̙́̀̑̋̄͊͐̉Â̶̳̜̻̝͍̙̯̤̫͊̔͝ͅA̶̛̲̖̾͐͑̽̈́̓͋̇͊Ă̴̱͙̠̘̻͕̺̽̉̆̌͛̂̌̒͜Ạ̶̛̥̻̙͇͓͓̫̺̪̩͈̪̈́̾͒́̈́̎͜A̴̝͓̟͇̰͒̀͐͊̉͠Ą̴͚̪͚̥͕͑̄̉́̽́͘A̸̢̩͈͉͕̞͙͈̩̔͋̽͐̀̈̅̑͜͠Ą̸̡͙̼͍̖͙̔̃̈́͗̽͆́͘͘͘͝͝A̵̢͔̳̰̙̖̽͋̈́̍͒̽̀̽̈͐͝ͅĂ̵̛̺̼͇̤͙̦͈͋̽́̔̅͋̓͆̔̂̏͝͠Ą̶̛̞̲͍͙̖͙̤̪̣̺̎͌̔̀͐̍̾̽̃̅̎͜A̸͕͕͉͎̺̔̐̅̑͊̽̓̎̈́͆̚͘͝Ä̵̙͔̜͓͕̭̭̰̯̼̮͙́̂̿͐́̌͘͝ͅͅ" />
                 </FormGroup>
                 <div className="mt-5 flex justify-end">
-                    <button className="bg-hackbca-orange bg-gradient-to-tr from-hackbca-blue to-hackbca-orange-dark text-white font-medium py-2 px-4 rounded transition-all hover:bg-hackbca-orange-dark focus:bg-hackbca-orange-dark focus:outline-none focus:ring-4 focus:ring-hackbca-orange focus:ring-opacity-75">{update ? "Update" : "Add Project"}</button>
+                    <button className="fancy-button">{update ? "Update" : "Add Project"}</button>
                 </div>
             </form>
         </div>

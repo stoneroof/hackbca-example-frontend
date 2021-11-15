@@ -66,12 +66,12 @@ export function Project() {
                 <div className="flex flex-row flex-wrap mt-1">
                     <div className="flex flex-row items-center space-x-1">
                         <FontAwesomeIcon icon={faGithub} />
-                        <a href="#" className="italic underline text-blue-500">https://example</a>
+                        <a href="https://www.youtube.com/watch?v=iik25wqIuFo" className="italic underline text-blue-500">https://example</a>
                     </div>
                     <div className="w-2" />
                     <div className="flex flex-row items-center space-x-1">
                         <FontAwesomeIcon icon={faExternalLinkAlt} />
-                        <a href="#" className="italic underline text-blue-500">https://example</a>
+                        <a href="https://www.youtube.com/watch?v=iik25wqIuFo" className="italic underline text-blue-500">https://example</a>
                     </div>
                 </div>
             </div>
