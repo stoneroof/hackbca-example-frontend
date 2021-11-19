@@ -1,20 +1,11 @@
+/// <reference path="../typings.d.ts" />
+
 import { useParams } from "react-router"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faUsers, faCalendar, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { names } from "../data/names";
-
-/**
- * @typedef {object} Project
- * @property {string} name
- * @property {string[]} owner
- * @property {string} date_proposed
- * @property {string} time
- * @property {string} [description]
- * @property {string} [github]
- * @property {string} [url]
- * @property {string} type
- */
+import { useEffect, useState } from "react";
 
 function seed_rand(seed) {
     // https://stackoverflow.com/a/424445
@@ -40,9 +31,10 @@ function get_random_names(rand) {
 
 /**
  * Contents for a project.
- * @param {Project} project project to display
+ * @param {Object} props
+ * @param {Project} props.project project to display
  */
-function ProjectContent(project) {
+function ProjectContent({project}) {
     return (
         <>
             <div className="flex flex-col sm:flex-row flex-wrap sm:items-end">
@@ -59,26 +51,25 @@ function ProjectContent(project) {
                 <div className="sm:flex-grow" />
                 <div className="flex flex-row items-center space-x-1">
                     <FontAwesomeIcon icon={faCalendar} />
-                    <p>{project.date_proposed} {project.time}</p>
+                    <p>{new Date(project.date_proposed).toLocaleDateString()} {new Date(project.time).toLocaleTimeString()}</p>
                 </div>
             </div>
             <hr className="my-1" />
             <div>
                 <p className="italic">Description:</p>
-                <p>
+                <div className="whitespace-pre-wrap">
                     {project.description}
-                </p>
+                </div>
             </div>
             <div className="flex flex-row flex-wrap mt-1">
-                <div className="flex flex-row items-center space-x-1">
+                {project.github && <div className="flex flex-row items-center space-x-1 mr-2">
                     <FontAwesomeIcon icon={faGithub} />
-                    <a href="https://www.youtube.com/watch?v=iik25wqIuFo" className="italic underline text-blue-500">https://example</a>
-                </div>
-                <div className="w-2" />
-                <div className="flex flex-row items-center space-x-1">
+                    <a href={project.github} className="italic underline text-blue-500">{project.github}</a>
+                </div>}
+                {project.url && <div className="flex flex-row items-center space-x-1">
                     <FontAwesomeIcon icon={faExternalLinkAlt} />
-                    <a href="https://www.youtube.com/watch?v=iik25wqIuFo" className="italic underline text-blue-500">https://example</a>
-                </div>
+                    <a href={project.url} className="italic underline text-blue-500">{project.url}</a>
+                </div>}
             </div>
         </>
     );
@@ -86,13 +77,29 @@ function ProjectContent(project) {
 
 export function Project() {
     const { id } = useParams();
-    const rand = seed_rand(id);
-    const names = get_random_names(rand);
+    /** @type {Project} */
+    const [project, setProject] = useState(null);
+    const [error, setError] = useState(null);
+    useEffect(async () => {
+        try {
+            const response = await fetch(`http://localhost:8000/project/${encodeURIComponent(id)}`);
+            if (response.status === 404) {
+                setError(new Error("Project not found"));
+            } else {
+                const data = await response.json();
+                console.log(data);
+                setProject(data);
+            }
+        } catch (e) {
+            setError(e);
+        }
+    }, []);
 
     return (
         <div className="bg-hackbca-dark-blue min-h-screen p-8 flex justify-center items-center">
             <div className="bg-white rounded shadow-lg p-8 w-192 max-w-full">
-                
+                {project && <ProjectContent project={project} />}
+                {error && <div className="text-red-500 col-span-full"><strong>Error:</strong> {error.message}</div>}
             </div>
         </div>
     )

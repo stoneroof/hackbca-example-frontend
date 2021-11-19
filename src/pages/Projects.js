@@ -1,8 +1,41 @@
+/// <reference path="../typings.d.ts" />
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleInfo, faStar, faPen, faTrash, faUsers, faBarsSort, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPen, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+/**
+ * A row for a
+ * @param {Project} project project to display 
+ * @returns row to put in the table
+ */
+function ProjectRow({project}) {
+  return (
+    <>
+      <div><Link className="text-hackbca-blue hover:underline" to={`/projects/${project.id}`}>{project.name}</Link></div>
+      <div>{project.owner.join(", ")}</div>
+      <div>{new Date(project.time).toLocaleTimeString()}</div>
+      <div>{project.type}</div>
+      <div className="flex flex-row items-center space-x-1"><Link className="text-hackbca-blue" to="/projectform?update=true"><FontAwesomeIcon icon={faPen} /></Link> <FontAwesomeIcon icon={faTrash} /></div>
+    </>
+  );
+}
 
 export function Projects() {
+  /** @type {Project[]} */
+  const [projects, setProjects] = useState([]);
+  const [error, setError] = useState(null);
+  useEffect(async () => {
+    try {
+      const response = await fetch("http://localhost:8000/projects");
+      const data = await response.json();
+      setProjects(data);
+    } catch (e) {
+      setError(e);
+    }
+  }, []);
+
   return (
     
     <div className="bg-hackbca-dark-blue min-h-screen p-8 flex justify-center items-center">
@@ -19,30 +52,18 @@ export function Projects() {
           <div> Click on the project name for more details!</div>
           
           
-          <div class="grid grid-cols-6 gap-4 items-start">
+          <div className="grid grid-cols-5 gap-4 items-start">
             
-            <div class="block mt-3 font-medium text-gray-600">Project</div>
-            <div class="block mt-3 font-medium text-gray-600">Owner</div>
-            <div class="block mt-3 font-medium text-gray-600">Time</div>
-            <div class="block mt-3 font-medium text-gray-600">Type</div>
-            <div class="block mt-3 font-medium text-gray-600">People Interested</div>
-            <div class="block mt-3 font-medium text-gray-600" >Edit/Delete</div>
+            <div className="block mt-3 font-medium text-gray-600">Project</div>
+            <div className="block mt-3 font-medium text-gray-600">Owner</div>
+            <div className="block mt-3 font-medium text-gray-600">Time</div>
+            <div className="block mt-3 font-medium text-gray-600">Type</div>
+            <div className="block mt-3 font-medium text-gray-600">Edit/Delete</div>
 
-            <div><Link className="text-hackbca-blue hover:underline" to="/projects/1">Remake Something!</Link></div>
-            <div>Anonymous</div>
-            <div>10:30 am</div>
-            <div>Coding</div>
-            <div>5 <FontAwesomeIcon icon={faUsers} /></div>
-            <div className="flex flex-row items-center space-x-1"><Link className="text-hackbca-blue" to="/projectform?update=true"><FontAwesomeIcon icon={faPen} /></Link> <FontAwesomeIcon icon={faTrash} /></div>
-
-            <div><Link className="text-hackbca-blue hover:underline" to="/projects/2">Project 2</Link></div>
-            <div>Anonymous 2</div>
-            <div>10:45 am</div>
-            <div>Games</div>
-            <div>3 <FontAwesomeIcon icon={faUsers} /></div>
-            <div className="flex flex-row items-center space-x-1"><Link className="text-hackbca-blue" to="/projectform?update=true"><FontAwesomeIcon icon={faPen} /></Link> <FontAwesomeIcon icon={faTrash} /></div>
-
-
+            {projects.map(project => {
+              return <ProjectRow project={project} key={project.id} />;
+            })}
+            {error && <div className="text-red-500 col-span-full"><strong>Error:</strong> {error.message}</div>}
           </div>
         </div>
       </div>
