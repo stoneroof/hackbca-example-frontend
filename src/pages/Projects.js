@@ -5,20 +5,28 @@ import { faPen, faTrash, faPlus, faCircleNotch } from '@fortawesome/free-solid-s
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { formatTime } from '../formatting';
+import StyledModal from '../modals';
 
 /**
  * A row for a
  * @param {Project} project project to display 
+ * @param {function (Project)} onDelete callback to delete the project
  * @returns row to put in the table
  */
-function ProjectRow({project}) {
+function ProjectRow({project, onDelete}) {
   return (
     <>
       <div><Link className="text-hackbca-blue hover:underline" to={`/projects/${project.id}`}>{project.name}</Link></div>
       <div>{project.owner.join(", ")}</div>
       <div>{formatTime(new Date(project.time))}</div>
       <div>{project.type}</div>
-      <div className="flex flex-row items-center space-x-1"><Link className="text-hackbca-blue" to="/projectform?update=true"><FontAwesomeIcon icon={faPen} /></Link> <FontAwesomeIcon icon={faTrash} /></div>
+      <div className="flex flex-row items-center space-x-1">
+        <Link className="text-hackbca-blue" to="/projectform?update=true"><FontAwesomeIcon icon={faPen} /></Link>
+        <a className="text-red-500" href="#" onClick={event => {
+          onDelete(project);
+          event.preventDefault();
+        }}><FontAwesomeIcon icon={faTrash} /></a>
+      </div>
     </>
   );
 }
@@ -38,6 +46,9 @@ export function Projects() {
       setError(e);
     }
   }, []);
+
+  /** @type {Project | null} */
+  const [projectToDelete, setProjectToDelete] = useState(null);
 
   const loading = !projects && !error;
 
@@ -66,13 +77,31 @@ export function Projects() {
             <div className="block mt-3 font-medium text-gray-600">Edit/Delete</div>
 
             {projects.map(project => {
-              return <ProjectRow project={project} key={project.id} />;
+              return <ProjectRow project={project} key={project.id} onDelete={project => setProjectToDelete(project)} />;
             })}
             {error && <div className="text-red-500 col-span-full"><strong>Error:</strong> {error.message}</div>}
-            {loading && <div className="opacity-50 col-span-full"><FontAwesomeIcon icon={faCircleNotch} spin /> Loading projects...</div>}
+            {loading && <div className="text-gray-500 col-span-full animate-pulse"><FontAwesomeIcon icon={faCircleNotch} spin /> Loading projects...</div>}
           </div>
         </div>
       </div>
+      <StyledModal show={!!projectToDelete} onHide={() => setProjectToDelete(null)}>
+        {projectToDelete && <>
+          <h3 className="w-full text-center font-bold text-lg">Delete the project "{projectToDelete.name}"?</h3>
+          <div className="flex flex-row mt-2 items-stretch">
+            <a href="#" className="flex-grow text-center font-medium py-2 px-4 rounded bg-gray-200 transition-colors hover:bg-gray-300 ring-gray-200 focus:ring-4 ring-opacity-50 focus:outline-none w-full flex items-center justify-center" onClick={() => {
+              setProjectToDelete(null);
+            }}><span>Nope, go back</span></a>
+            <div className="w-5"></div>
+            <a href="#" className="flex-grow text-center font-medium py-2 px-4 rounded bg-red-500 text-white transition-colors hover:bg-red-700 ring-red-500 focus:ring-4 ring-opacity-50 focus:outline-none w-full flex items-center justify-center" onClick={() => {
+              setProjectToDelete(null);
+              fetch(`http://localhost:8000/projects/${projectToDelete.id}`, {
+                method: "DELETE"
+              });
+              setProjects(projects.filter(project => project.id !== projectToDelete.id));
+            }}><span>Yes! I hate this project! Delete innovation! Caveman era best era. :)</span></a> { /* Blame Edward for this one */ }
+          </div>
+        </>}
+      </StyledModal>
     </div>
   );
 }

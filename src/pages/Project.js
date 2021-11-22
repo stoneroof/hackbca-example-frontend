@@ -86,7 +86,7 @@ export function Project() {
             <div className="bg-white rounded shadow-lg p-8 w-192 max-w-full">
                 {project && <ProjectContent project={project} />}
                 {error && <div className="text-red-500"><strong>Error:</strong> {error.message}</div>}
-                {loading && <div className="opacity-50"><FontAwesomeIcon icon={faCircleNotch} spin /> Loading project...</div>}
+                {loading && <div className="text-gray-500 animate-pulse"><FontAwesomeIcon icon={faCircleNotch} spin /> Loading project...</div>}
             </div>
         </div>
     )

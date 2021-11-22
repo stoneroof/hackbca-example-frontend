@@ -11,7 +11,8 @@ module.exports = {
                 "hackbca-less-dark-blue": "#0d3254",
                 "hackbca-blue": "#3274E8",
                 "hackbca-orange": "#EC8633",
-                "hackbca-orange-dark": "#de6c10"
+                "hackbca-orange-dark": "#de6c10",
+                "black-opacity-50": "rgba(0, 0, 0, 0.5)"
             },
             width: {
                 "192": "48rem"
