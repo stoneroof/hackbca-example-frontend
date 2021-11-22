@@ -1,9 +1,10 @@
 /// <reference path="../typings.d.ts" />
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPen, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPen, faTrash, faPlus, faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { formatTime } from '../formatting';
 
 /**
  * A row for a
@@ -15,7 +16,7 @@ function ProjectRow({project}) {
     <>
       <div><Link className="text-hackbca-blue hover:underline" to={`/projects/${project.id}`}>{project.name}</Link></div>
       <div>{project.owner.join(", ")}</div>
-      <div>{new Date(project.time).toLocaleTimeString()}</div>
+      <div>{formatTime(new Date(project.time))}</div>
       <div>{project.type}</div>
       <div className="flex flex-row items-center space-x-1"><Link className="text-hackbca-blue" to="/projectform?update=true"><FontAwesomeIcon icon={faPen} /></Link> <FontAwesomeIcon icon={faTrash} /></div>
     </>
@@ -31,10 +32,14 @@ export function Projects() {
       const response = await fetch("http://localhost:8000/projects");
       const data = await response.json();
       setProjects(data);
+      setError(null);
     } catch (e) {
+      setProjects([]);
       setError(e);
     }
   }, []);
+
+  const loading = !projects && !error;
 
   return (
     
@@ -64,6 +69,7 @@ export function Projects() {
               return <ProjectRow project={project} key={project.id} />;
             })}
             {error && <div className="text-red-500 col-span-full"><strong>Error:</strong> {error.message}</div>}
+            {loading && <div className="opacity-50 col-span-full"><FontAwesomeIcon icon={faCircleNotch} spin /> Loading projects...</div>}
           </div>
         </div>
       </div>
