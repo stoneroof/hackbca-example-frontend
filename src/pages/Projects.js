@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { formatTime } from '../formatting';
 import StyledModal from '../modals';
+import { getTypeLabel } from '../types';
 
 /**
  * A row for a
@@ -16,12 +17,12 @@ import StyledModal from '../modals';
 function ProjectRow({project, onDelete}) {
   return (
     <>
-      <div><Link className="text-hackbca-blue hover:underline" to={`/projects/${project.id}`}>{project.name}</Link></div>
-      <div>{project.owner.join(", ")}</div>
-      <div>{formatTime(new Date(project.time))}</div>
-      <div>{project.type}</div>
-      <div className="flex flex-row items-center space-x-1">
-        <Link className="text-hackbca-blue" to="/projectform?update=true"><FontAwesomeIcon icon={faPen} /></Link>
+      <div className="truncate"><Link className="text-hackbca-blue hover:underline" to={`/projects/${project.id}`}>{project.name}</Link></div>
+      <div className="truncate">{project.users.map(u => u.email).join(", ")}</div>
+      <div className="truncate">{formatTime(new Date(project.time))}</div>
+      <div className="truncate">{getTypeLabel(project.type)}</div>
+      <div className="truncate flex flex-row items-center space-x-1">
+        <Link className="text-hackbca-blue" to={`/projects/${project.id}/edit`}><FontAwesomeIcon icon={faPen} /></Link>
         <a className="text-red-500" href="#" onClick={event => {
           onDelete(project);
           event.preventDefault();
@@ -60,7 +61,7 @@ export function Projects() {
         <div className="flex items-start mb-6">
           <h1 className="text-5xl font-bold fancy-text w-max max-w-full pb-2">Available Projects</h1>
           <div className="flex-grow" />
-          <Link to="/projectform" className="fancy-button ml-1 block">
+          <Link to="/projects/new" className="fancy-button ml-1 block">
             <FontAwesomeIcon icon={faPlus} className="mr-2" /> Add Project
           </Link>
         </div>

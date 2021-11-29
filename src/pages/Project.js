@@ -6,6 +6,8 @@ import { faUser, faUsers, faCalendar, faExternalLinkAlt, faCircleNotch, faClock 
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { useEffect, useState } from "react";
 import { formatDateProposed, formatTime } from "../formatting";
+import { Link } from "react-router-dom";
+import { getTypeLabel } from "../types";
 
 /**
  * Contents for a project.
@@ -19,11 +21,11 @@ function ProjectContent({project}) {
                 <div>
                     <div className="flex flex-row flex-wrap items-center space-x-2 mb-1">
                         <h1 className="text-3xl font-bold">{project.name}</h1>
-                        <p className="italic">({project.type})</p>
+                        <p className="italic">({getTypeLabel(project.type)})</p>
                     </div>
                     <div className="flex flex-row items-center space-x-1">
-                        <FontAwesomeIcon icon={project.owner.length == 1 ? faUser : faUsers} />
-                        <p className="italic">{project.owner.join(", ")}</p>
+                        <FontAwesomeIcon icon={project.users.length == 1 ? faUser : faUsers} />
+                        <p className="italic">{project.users.map(u => u.email).join(", ")}</p>
                     </div>
                 </div>
                 <div className="sm:flex-grow" />
@@ -53,20 +55,22 @@ function ProjectContent({project}) {
                     <a href={project.url} className="italic underline text-blue-500">{project.url}</a>
                 </div>}
             </div>
+            <div className="mt-4">
+                <Link to={`/projects/${project.id}/edit`} className="fancy-button">Edit</Link>
+            </div>
         </>
     );
 }
 
 export function Project() {
     const { id } = useParams();
-    console.log(id);
     /** @type {Project} */
     const [project, setProject] = useState(null);
     const [error, setError] = useState(null);
     useEffect(async () => {
         try {
             const response = await fetch(`http://localhost:8000/projects/${encodeURIComponent(id)}`);
-            if (response.status === 404) {
+            if (response.status === 404 || response.status === 422) {
                 setProject(null);
                 setError(new Error("Project not found"));
             } else {
