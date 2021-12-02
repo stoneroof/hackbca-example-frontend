@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { formatDateProposed, formatTime } from "../formatting";
 import { Link } from "react-router-dom";
 import { getTypeLabel } from "../types";
+import { getAPIURL } from "../utils";
 
 /**
  * Contents for a project.
@@ -69,7 +70,7 @@ export function Project() {
     const [error, setError] = useState(null);
     useEffect(async () => {
         try {
-            const response = await fetch(`http://localhost:8000/projects/${encodeURIComponent(id)}`);
+            const response = await fetch(`${getAPIURL()}/projects/${encodeURIComponent(id)}`);
             if (response.status === 404 || response.status === 422) {
                 setProject(null);
                 setError(new Error("Project not found"));

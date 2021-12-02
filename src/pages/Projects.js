@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { formatTime } from '../formatting';
 import StyledModal from '../modals';
 import { getTypeLabel } from '../types';
+import { getAPIURL } from '../utils';
 
 /**
  * A row for a
@@ -38,7 +39,7 @@ export function Projects() {
   const [error, setError] = useState(null);
   useEffect(async () => {
     try {
-      const response = await fetch("http://localhost:8000/projects");
+      const response = await fetch(`${getAPIURL()}/projects`);
       const data = await response.json();
       setProjects(data);
       setError(null);
@@ -95,7 +96,7 @@ export function Projects() {
             <div className="w-5"></div>
             <a href="#" className="flex-grow text-center font-medium py-2 px-4 rounded bg-red-500 text-white transition-colors hover:bg-red-700 ring-red-500 focus:ring-4 ring-opacity-50 focus:outline-none w-full flex items-center justify-center" onClick={() => {
               setProjectToDelete(null);
-              fetch(`http://localhost:8000/projects/${projectToDelete.id}`, {
+              fetch(`${getAPIURL()}/projects/${projectToDelete.id}`, {
                 method: "DELETE"
               });
               setProjects(projects.filter(project => project.id !== projectToDelete.id));

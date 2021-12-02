@@ -4,6 +4,7 @@ import { ErrorMessage, Field, FieldArray, Formik } from "formik";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { getTypes } from "../types";
+import { getAPIURL } from "../utils";
 
 function FormGroup({label, name, errors, ...props}) {
     return <div className="flex-grow">
@@ -74,7 +75,7 @@ function ProjectFormContent({update, project}) {
     const [usersError, setUsersError] = useState(null);
     useEffect(async () => {
         try {
-            const response = await fetch("http://localhost:8000/users");
+            const response = await fetch(`${getAPIURL()}/users`);
             if (response.status === 200) {
                 setUsers(await response.json());
             } else {
@@ -115,7 +116,7 @@ function ProjectFormContent({update, project}) {
                 }}
                 onSubmit={async (values, { setSubmitting, setErrors }) => {
                     if (update) {
-                        const response = await fetch(`http://localhost:8000/projects/${update}`, {
+                        const response = await fetch(`${getAPIURL()}/projects/${update}`, {
                             method: "PUT",
                             headers: {
                                 "Content-Type": "application/json"
@@ -131,7 +132,7 @@ function ProjectFormContent({update, project}) {
                             console.error(`Got status code: ${response.status}`);
                         }
                     } else {
-                        const response = await fetch("http://localhost:8000/projects", {
+                        const response = await fetch(`${getAPIURL()}/projects`, {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json"
@@ -220,7 +221,7 @@ export function UpdateProjectForm() {
     const [error, setError] = useState(null);
     useEffect(async () => {
         try {
-            const response = await fetch(`http://localhost:8000/projects/${encodeURIComponent(id)}`);
+            const response = await fetch(`${getAPIURL()}/projects/${encodeURIComponent(id)}`);
             if (response.status === 404 || response.status === 422) {
                 setProject(null);
                 setError(new Error("Project not found"));
