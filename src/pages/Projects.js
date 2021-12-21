@@ -69,7 +69,7 @@ export function Projects() {
                 <FontAwesomeIcon icon={faPlus} className="mr-2" /> Add Project
               </Link> :
               <a
-                href={`${getAPIURL()}/login/google`}
+                href={`${getAPIURL()}/login/google?redirect=projects`}
                 className="fancy-button ml-1 block">
                 Sign in to create project
               </a>
