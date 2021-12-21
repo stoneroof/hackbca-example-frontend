@@ -1,8 +1,9 @@
 import { faChevronCircleDown, faMinusCircle, faPlusCircle, faCircleNotch } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ErrorMessage, Field, FieldArray, Formik } from "formik";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router";
+import { AuthContext } from "../App";
 import { getTypes } from "../types";
 import { getAPIURL } from "../utils";
 
@@ -70,6 +71,7 @@ function prepareInput({date_proposed, time, ...values}) {
 }
 
 function ProjectFormContent({update, project}) {
+    const user = useContext(AuthContext);
     const navigate = useNavigate();
     const [users, setUsers] = useState(null);
     const [usersError, setUsersError] = useState(null);
@@ -86,11 +88,13 @@ function ProjectFormContent({update, project}) {
         }
     }, []);
 
+    const otherUsers = users?.filter(({id}) => id !== user?.id);
+
     return (
         <div className="bg-hackbca-dark-blue min-h-screen p-8 flex justify-center items-center">
             <Formik
                 initialValues={project ? {...project,
-                    users: project.users.map(({id}) => id),
+                    users: project.users.filter(({id}) => id !== user?.id).map(({id}) => id),
                     time: `${("0" + new Date(project.time).getHours()).slice(-2)}:${("0" + new Date(project.time).getMinutes()).slice(-2)}`,
                     date_proposed: `${new Date(project.date_proposed).getFullYear()}-${("0" + (new Date(project.date_proposed).getMonth() + 1)).slice(-2)}-${("0" + new Date(project.date_proposed).getDate()).slice(-2)}`,
                 } : {
@@ -159,16 +163,22 @@ function ProjectFormContent({update, project}) {
                         }} errors={errors} />
                         <div className="flex-grow">
                             <span className="block mt-3 font-medium text-gray-600">Owners</span>
+                            <select disabled className="w-full mb-1 appearance-none rounded px-3 py-2 cursor-not-allowed border border-gray-300">
+                                <option selected>{user?.email ?? "You"}</option>
+                            </select>
                             <FieldArray name="users" render={({push, remove}) => (
                                 <>
                                     {values.users.map((user, index) => {
                                         return <div key={index} className="mb-1">
                                             <div className="flex items-center" key={index}>
-                                                {values.users.length > 1 && <a className="text-gray-500 font-medium w-7" href="#" onClick={e => {
+                                                <a className="text-gray-500 font-medium w-7" href="#" onClick={e => {
                                                     e.preventDefault();
                                                     remove(index);
-                                                }}><FontAwesomeIcon icon={faMinusCircle} className="text-red-500" /><span className="sr-only">Delete</span></a>}
-                                                <UserDropdown index={index} users={users} error={usersError} />
+                                                }}>
+                                                    <FontAwesomeIcon icon={faMinusCircle} className="text-red-500" />
+                                                    <span className="sr-only">Delete</span>
+                                                </a>
+                                                <UserDropdown index={index} users={otherUsers} error={usersError} />
                                             </div>
                                             <ErrorMessage name={`users.${index}`} component="div" className="mb-1 text-red-500" />
                                         </div>
@@ -219,6 +229,8 @@ export function UpdateProjectForm() {
     const { id } = useParams();
     const [project, setProject] = useState(null);
     const [error, setError] = useState(null);
+    const user = useContext(AuthContext);
+
     useEffect(async () => {
         try {
             const response = await fetch(`${getAPIURL()}/projects/${encodeURIComponent(id)}`);
@@ -234,6 +246,12 @@ export function UpdateProjectForm() {
             setError(e);
         }
     }, []);
+
+    // TODO Will do later today
+    // if (project != null) {
+    //     if (!(user in project.users))
+    //         return;
+    // }
 
     const loading = !project && !error;
 

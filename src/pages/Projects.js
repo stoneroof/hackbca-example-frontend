@@ -3,15 +3,16 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen, faTrash, faPlus, faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { formatTime } from '../formatting';
 import StyledModal from '../modals';
 import { getTypeLabel } from '../types';
 import { getAPIURL } from '../utils';
+import { AuthContext } from '../App';
 
 /**
  * A row for a
- * @param {Project} project project to display 
+ * @param {Project} project project to display
  * @param {function (Project)} onDelete callback to delete the project
  * @returns row to put in the table
  */
@@ -62,9 +63,17 @@ export function Projects() {
         <div className="flex items-start mb-6">
           <h1 className="text-5xl font-bold fancy-text w-max max-w-full pb-2">Available Projects</h1>
           <div className="flex-grow" />
-          <Link to="/projects/new" className="fancy-button ml-1 block">
-            <FontAwesomeIcon icon={faPlus} className="mr-2" /> Add Project
-          </Link>
+          {
+            useContext(AuthContext) ?
+              <Link to="/projects/new" className="fancy-button ml-1 block">
+                <FontAwesomeIcon icon={faPlus} className="mr-2" /> Add Project
+              </Link> :
+              <a
+                href={`${getAPIURL()}/login/google`}
+                className="fancy-button ml-1 block">
+                Sign in to create project
+              </a>
+          }
         </div>
         <div className="w-full bg-gray-100 rounded px-3 py-2">
           <div> Click on the project name for more details!</div>
