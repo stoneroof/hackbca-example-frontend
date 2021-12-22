@@ -55,7 +55,7 @@ function UserDropdown({ index, users, error }) {
     </div>;
 }
 
-function prepareInput({date_proposed, time, ...values}) {
+function prepareInput({date_proposed, time, users, ...values}, currentUser) {
     const [hour, minute] = time.split(":").map(p => parseInt(p));
     const timeDate = new Date();
     timeDate.setHours(hour);
@@ -67,7 +67,7 @@ function prepareInput({date_proposed, time, ...values}) {
     proposedDate.setFullYear(year);
     proposedDate.setMonth(month - 1);
     proposedDate.setDate(day);
-    return {...values, time: timeDate.toISOString(), date_proposed: proposedDate.toISOString()};
+    return { ...values, time: timeDate.toISOString(), date_proposed: proposedDate.toISOString(), users: [...users, currentUser.id] };
 }
 
 function ProjectFormContent({update, project}) {
@@ -99,7 +99,7 @@ function ProjectFormContent({update, project}) {
                     date_proposed: `${new Date(project.date_proposed).getFullYear()}-${("0" + (new Date(project.date_proposed).getMonth() + 1)).slice(-2)}-${("0" + new Date(project.date_proposed).getDate()).slice(-2)}`,
                 } : {
                     name: "",
-                    users: [""],
+                    users: [],
                     date_proposed: "",
                     time: "",
                     type: "",
@@ -125,7 +125,8 @@ function ProjectFormContent({update, project}) {
                             headers: {
                                 "Content-Type": "application/json"
                             },
-                            body: JSON.stringify(prepareInput(values)),
+                            body: JSON.stringify(prepareInput(values, user)),
+                            credentials: "include"
                         });
                         if (response.status === 200) {
                             setSubmitting(false);
@@ -141,7 +142,8 @@ function ProjectFormContent({update, project}) {
                             headers: {
                                 "Content-Type": "application/json"
                             },
-                            body: JSON.stringify(prepareInput(values)),
+                            body: JSON.stringify(prepareInput(values, user)),
+                            credentials: "include"
                         });
                         if (response.status === 200) {
                             const { id } = await response.json();
@@ -164,11 +166,11 @@ function ProjectFormContent({update, project}) {
                         <div className="flex-grow">
                             <span className="block mt-3 font-medium text-gray-600">Owners</span>
                             <select disabled className="w-full mb-1 appearance-none rounded px-3 py-2 cursor-not-allowed border border-gray-300">
-                                <option selected>{user?.email ?? "You"}</option>
+                                <option>{user?.email ?? "You"}</option>
                             </select>
                             <FieldArray name="users" render={({push, remove}) => (
                                 <>
-                                    {values.users.map((user, index) => {
+                                    {values.users.map((_, index) => {
                                         return <div key={index} className="mb-1">
                                             <div className="flex items-center" key={index}>
                                                 <a className="text-gray-500 font-medium w-7" href="#" onClick={e => {
@@ -247,7 +249,14 @@ export function UpdateProjectForm() {
         }
     }, []);
 
-    // TODO Will do later today
+    if (!user) {
+        return <div className="bg-hackbca-dark-blue min-h-screen p-8 flex justify-center items-center">
+            <div className="bg-white rounded shadow-lg p-8 w-192 max-w-full">
+                Sign in to add or edit projects.
+            </div>
+        </div>;
+    }
+
     // if (project != null) {
     //     if (!(user in project.users))
     //         return;
