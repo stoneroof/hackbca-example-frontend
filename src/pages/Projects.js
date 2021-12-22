@@ -82,7 +82,7 @@ export function Projects() {
           <div> Click on the project name for more details!</div>
           
           
-          <div className={`grid grid-cols-${useContext(AuthContext) ? 5 : 4} gap-4 items-start`}>
+          <div className={`grid ${useContext(AuthContext) ? "grid-cols-5" : "grid-cols-4"} gap-4 items-start`}>
             
             <div className="block mt-3 font-medium text-gray-600">Project</div>
             <div className="block mt-3 font-medium text-gray-600">Owner</div>
