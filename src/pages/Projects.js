@@ -23,13 +23,16 @@ function ProjectRow({project, onDelete}) {
       <div className="truncate">{project.users.map(u => u.email).join(", ")}</div>
       <div className="truncate">{formatTime(new Date(project.time))}</div>
       <div className="truncate">{getTypeLabel(project.type)}</div>
-      <div className="truncate flex flex-row items-center space-x-1">
-        <Link className="text-hackbca-blue" to={`/projects/${project.id}/edit`}><FontAwesomeIcon icon={faPen} /></Link>
-        <a className="text-red-500" href="#" onClick={event => {
-          onDelete(project);
-          event.preventDefault();
-        }}><FontAwesomeIcon icon={faTrash} /></a>
-      </div>
+        {
+          project.users.map(u => u.email).includes(useContext(AuthContext)?.email) &&
+            <div className="truncate flex flex-row items-center space-x-1">
+              <Link className="text-hackbca-blue" to={`/projects/${project.id}/edit`}><FontAwesomeIcon icon={faPen} /></Link>
+              <a className="text-red-500" href="#" onClick={event => {
+              onDelete(project);
+              event.preventDefault();
+              }}><FontAwesomeIcon icon={faTrash} /></a>
+            </div>
+        }
     </>
   );
 }
@@ -79,13 +82,16 @@ export function Projects() {
           <div> Click on the project name for more details!</div>
           
           
-          <div className="grid grid-cols-5 gap-4 items-start">
+          <div className={`grid grid-cols-${useContext(AuthContext) ? 5 : 4} gap-4 items-start`}>
             
             <div className="block mt-3 font-medium text-gray-600">Project</div>
             <div className="block mt-3 font-medium text-gray-600">Owner</div>
             <div className="block mt-3 font-medium text-gray-600">Time</div>
             <div className="block mt-3 font-medium text-gray-600">Type</div>
-            <div className="block mt-3 font-medium text-gray-600">Edit/Delete</div>
+            {
+              useContext(AuthContext) &&
+                <div className="block mt-3 font-medium text-gray-600">Edit/Delete</div>
+            }
 
             {projects.map(project => {
               return <ProjectRow project={project} key={project.id} onDelete={project => setProjectToDelete(project)} />;

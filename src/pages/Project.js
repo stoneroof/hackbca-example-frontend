@@ -4,11 +4,12 @@ import { useParams } from "react-router"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faUsers, faCalendar, faExternalLinkAlt, faCircleNotch, faClock } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { formatDateProposed, formatTime } from "../formatting";
 import { Link } from "react-router-dom";
 import { getTypeLabel } from "../types";
 import { getAPIURL } from "../utils";
+import { AuthContext } from '../App';
 
 /**
  * Contents for a project.
@@ -56,9 +57,12 @@ function ProjectContent({project}) {
                     <a href={project.url} className="italic underline text-blue-500">{project.url}</a>
                 </div>}
             </div>
-            <div className="mt-4">
-                <Link to={`/projects/${project.id}/edit`} className="fancy-button">Edit</Link>
-            </div>
+            {
+                project.users.map(u => u.email).includes(useContext(AuthContext)?.email) &&
+                <div className="mt-4">
+                    <Link to={`/projects/${project.id}/edit`} className="fancy-button">Edit</Link>
+                </div>
+            }
         </>
     );
 }
