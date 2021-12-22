@@ -17,22 +17,26 @@ import { AuthContext } from '../App';
  * @returns row to put in the table
  */
 function ProjectRow({project, onDelete}) {
+  const user = useContext(AuthContext);
+
   return (
     <>
       <div className="truncate"><Link className="text-hackbca-blue hover:underline" to={`/projects/${project.id}`}>{project.name}</Link></div>
       <div className="truncate">{project.users.map(u => u.email).join(", ")}</div>
       <div className="truncate">{formatTime(new Date(project.time))}</div>
       <div className="truncate">{getTypeLabel(project.type)}</div>
+      {user && <div className="truncate flex flex-row items-center space-x-1">
         {
-          project.users.map(u => u.email).includes(useContext(AuthContext)?.email) &&
-            <div className="truncate flex flex-row items-center space-x-1">
+          project.users.map(u => u.email).includes(user.email) &&
+            <>
               <Link className="text-hackbca-blue" to={`/projects/${project.id}/edit`}><FontAwesomeIcon icon={faPen} /></Link>
               <a className="text-red-500" href="#" onClick={event => {
               onDelete(project);
               event.preventDefault();
               }}><FontAwesomeIcon icon={faTrash} /></a>
-            </div>
+            </>
         }
+      </div>}
     </>
   );
 }
