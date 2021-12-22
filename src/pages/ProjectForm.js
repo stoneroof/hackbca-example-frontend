@@ -58,15 +58,15 @@ function UserDropdown({ index, users, error }) {
 function prepareInput({date_proposed, time, users, ...values}, currentUser) {
     const [hour, minute] = time.split(":").map(p => parseInt(p));
     const timeDate = new Date();
-    timeDate.setHours(hour);
-    timeDate.setMinutes(minute);
-    timeDate.setSeconds(0);
-    timeDate.setMilliseconds(0);
+    timeDate.setUTCHours(hour);
+    timeDate.setUTCMinutes(minute);
+    timeDate.setUTCSeconds(0);
+    timeDate.setUTCMilliseconds(0);
     const proposedDate = new Date();
     const [year, month, day] = date_proposed.split("-").map(p => parseInt(p));
-    proposedDate.setFullYear(year);
-    proposedDate.setMonth(month - 1);
-    proposedDate.setDate(day);
+    proposedDate.setUTCFullYear(year);
+    proposedDate.setUTCMonth(month - 1);
+    proposedDate.setUTCDate(day);
     return { ...values, time: timeDate.toISOString(), date_proposed: proposedDate.toISOString(), users: [...users, currentUser.id] };
 }
 
