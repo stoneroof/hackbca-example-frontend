@@ -67,6 +67,10 @@ function prepareInput({date_proposed, time, users, ...values}, currentUser) {
     proposedDate.setUTCFullYear(year);
     proposedDate.setUTCMonth(month - 1);
     proposedDate.setUTCDate(day);
+    proposedDate.setUTCHours(0);
+    proposedDate.setUTCMinutes(0);
+    proposedDate.setUTCSeconds(0);
+    proposedDate.setUTCMilliseconds(0);
     return { ...values, time: timeDate.toISOString(), date_proposed: proposedDate.toISOString(), users: [...users, currentUser.id] };
 }
 
