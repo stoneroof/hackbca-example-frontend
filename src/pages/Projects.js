@@ -116,7 +116,8 @@ export function Projects() {
             <a href="#" className="flex-grow text-center font-medium py-2 px-4 rounded bg-red-500 text-white transition-colors hover:bg-red-700 ring-red-500 focus:ring-4 ring-opacity-50 focus:outline-none w-full flex items-center justify-center" onClick={() => {
               setProjectToDelete(null);
               fetch(`${getAPIURL()}/projects/${projectToDelete.id}`, {
-                method: "DELETE"
+                method: "DELETE",
+                credentials: "include"
               });
               setProjects(projects.filter(project => project.id !== projectToDelete.id));
             }}><span>Yes! I hate this project! Delete innovation! Caveman era best era. :)</span></a> { /* Blame Edward for this one */ }
